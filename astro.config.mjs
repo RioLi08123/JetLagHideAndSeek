@@ -6,7 +6,33 @@ import AstroPWA from "@vite-pwa/astro";
 import { defineConfig } from "astro/config";
 
 // https://astro.build/config
+const isCloudflarePages = Boolean(process.env.CF_PAGES);
+const isGitHubActions = process.env.GITHUB_ACTIONS === "true";
+const isJetLagRepo =
+    typeof process.env.GITHUB_REPOSITORY === "string" &&
+    process.env.GITHUB_REPOSITORY.toLowerCase().endsWith("/jetlaghideandseek");
+const isGitHubPages =
+    Boolean(process.env.GITHUB_PAGES) ||
+    process.env.DEPLOY_TARGET === "github-pages" ||
+    (isGitHubActions && isJetLagRepo);
+
 export default defineConfig({
+    // This repo was originally configured for GitHub Pages (served from a subpath).
+    // Cloudflare Pages serves from `/` by default, so we pick sane defaults based on
+    // the deployment environment to avoid broken asset URLs.
+    //
+    // Override knobs (any environment):
+    // - PUBLIC_BASE_PATH (or BASE_PATH): e.g. "/", "/JetLagHideAndSeek"
+    // - PUBLIC_SITE_URL (or SITE_URL): full origin, used for sitemaps/meta/PWA helpers
+    site:
+        process.env.PUBLIC_SITE_URL ||
+        process.env.SITE_URL ||
+        process.env.CF_PAGES_URL ||
+        (isGitHubPages ? "https://taibeled.github.io" : undefined),
+    base:
+        process.env.PUBLIC_BASE_PATH ||
+        process.env.BASE_PATH ||
+        (isCloudflarePages ? "/" : isGitHubPages ? "/JetLagHideAndSeek" : "/"),
     integrations: [
         react(),
         tailwind({
@@ -47,6 +73,4 @@ export default defineConfig({
     devToolbar: {
         enabled: false,
     },
-    site: "https://taibeled.github.io",
-    base: "JetLagHideAndSeek",
 });

@@ -9,6 +9,13 @@ export interface Props {
 }
 
 const { className } = Astro.props;
+
+const canonicalUrl = Astro.site
+    ? new URL(Astro.url.pathname, Astro.site).href
+    : Astro.url.href;
+const canonicalHost = Astro.site
+    ? new URL(Astro.site).host
+    : Astro.url.host;
 ---
 
 <!doctype html>
@@ -89,10 +96,7 @@ const { className } = Astro.props;
         />
 
         <!-- Facebook Meta Tags -->
-        <meta
-            property="og:url"
-            content="https://taibeled.github.io/JetLagHideAndSeek/"
-        />
+        <meta property="og:url" content={canonicalUrl} />
         <meta property="og:type" content="website" />
         <meta
             property="og:title"
@@ -109,11 +113,8 @@ const { className } = Astro.props;
 
         <!-- Twitter Meta Tags -->
         <meta name="twitter:card" content="summary_large_image" />
-        <meta property="twitter:domain" content="taibeled.github.io" />
-        <meta
-            property="twitter:url"
-            content="https://taibeled.github.io/JetLagHideAndSeek/"
-        />
+        <meta property="twitter:domain" content={canonicalHost} />
+        <meta property="twitter:url" content={canonicalUrl} />
         <meta
             name="twitter:title"
             content="Map Generator for Jet Lag The Game: Hide and Seek"

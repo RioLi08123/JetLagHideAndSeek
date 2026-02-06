@@ -92,6 +92,17 @@ pnpm dev
 
 After making any modifications, please run `pnpm lint` to have your code automatically formatted and errors spotted.
 
+## Deploying to Cloudflare Pages
+
+This site is an Astro static build and works on Cloudflare Pages.
+
+- **Build command**: `pnpm build`
+- **Build output directory**: `dist`
+- **Node version**: 24 (or earlier)
+
+Notes:
+- The Astro config defaults to **`/` on Cloudflare Pages**, and uses **`/JetLagHideAndSeek` on GitHub Pages**. You can override with `PUBLIC_BASE_PATH` and `PUBLIC_SITE_URL`.
+
 ## Contributors
 
 A great deal of appreciation goes out to these individuals who have helped to create this tool:
